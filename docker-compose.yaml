@@ -1,0 +1,8 @@
+services:
+  management:
+    container_name: management
+    build:
+      context: .
+      dockerfile: ./management-service/Management.Service/Dockerfile
+    ports:
+      - "8001:8080"
