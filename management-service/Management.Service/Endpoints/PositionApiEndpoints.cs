@@ -8,7 +8,7 @@ public static class PositionApiEndpoints
 {
   public static void RegisterEndpoints(this IEndpointRouteBuilder routeBuilder)
   {
-    routeBuilder.MapPost("/api/positions", async Task<IResult> ([FromServices] IPositionStore positionStore, CreatePositionRequest request) =>
+    routeBuilder.MapPost("/api/positions", async Task<IResult> ([FromServices] IPositionRepository positionRepository, CreatePositionRequest request) =>
     {
       var position = new Position
       {
@@ -20,18 +20,53 @@ public static class PositionApiEndpoints
         DepartmentId = request.DepartmentId,
       };
 
-      await positionStore.CreatePosition(position);
+      await positionRepository.CreatePosition(position);
 
       return TypedResults.Created(position.Id.ToString());
     });
 
-    routeBuilder.MapGet("/api/positions/{positionId}", async Task<IResult> ([FromServices] IPositionStore positionStore, int positionId) =>
+    routeBuilder.MapPut("/api/positions/{positionId}", async Task<IResult> ([FromServices] IPositionRepository positionRepository, int positionId, UpdatePositionRequest request) =>
     {
-      var position = await positionStore.GetById(positionId);
+      var positionFound = await positionRepository.GetById(positionId, true);
+      if (positionFound is null)
+      {
+        return TypedResults.NotFound();
+      }
+      positionFound.Title = request.Title;
+      positionFound.PositionNumber = request.PositionNumber;
+      positionFound.PositionStatusId = request.StatusId;
+      positionFound.RecruiterId = request.RecruiterId;
+      positionFound.Budget = request.Budget;
+      positionFound.DepartmentId = request.DepartmentId;
+
+      await positionRepository.UpdatePosition(positionFound);
+
+      return TypedResults.NoContent();
+    });
+
+    routeBuilder.MapGet("/api/positions/{positionId}", async Task<IResult> ([FromServices] IPositionRepository positionRepository, int positionId) =>
+    {
+      var position = await positionRepository.GetById(positionId, false);
 
       return position is null
         ? TypedResults.NotFound("Position Not Found")
-        : TypedResults.Ok(new GetPositionResponse(position.Id, position.Title, position.Budget, position.RecruiterId, position.DepartmentId));
+        : TypedResults.Ok(new GetPositionResponse(
+          position.Id,
+          position.Title,
+          position.Budget,
+          position.RecruiterId,
+          position.DepartmentId,
+          position.PositionStatusId,
+          position.PositionNumber));
+    });
+
+    routeBuilder.MapGet("/api/positions", async Task<IResult> ([FromServices] IPositionRepository positionRepository) =>
+    {
+      var positions = await positionRepository.GetPositions(false);
+
+      return positions is null
+        ? TypedResults.NotFound("Position Not Found")
+        : TypedResults.Ok(positions);
     });
   }
 }

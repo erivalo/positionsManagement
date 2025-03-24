@@ -10,7 +10,7 @@ public static class EntityFrameworkExtensions
     services.AddDbContext<RepositoryContext>(options =>
       options.UseSqlite(configuration.GetConnectionString("Default")));
 
-    services.AddScoped<IPositionStore, PositionRepository>();
+    services.AddScoped<IPositionRepository, PositionRepository>();
   }
 
 }
