@@ -2,6 +2,8 @@ using Management.Service.Dtos;
 using Management.Service.Infrastructure;
 using Management.Service.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Management.Service.Endpoints;
 public static class PositionApiEndpoints
@@ -67,6 +69,19 @@ public static class PositionApiEndpoints
       return positions is null
         ? TypedResults.NotFound("Position Not Found")
         : TypedResults.Ok(positions);
+    });
+
+    routeBuilder.MapDelete("/api/positions/{positionId}", async Task<IResult> ([FromServices] IPositionRepository positionRepository, int positionId) =>
+    {
+      var positionFound = await positionRepository.GetById(positionId, true);
+      if (positionFound is null)
+      {
+        return TypedResults.NotFound();
+      }
+
+      await positionRepository.DeletePosition(positionFound);
+
+      return TypedResults.NoContent();
     });
   }
 }

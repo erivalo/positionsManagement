@@ -14,8 +14,14 @@ internal class PositionRepository : RepositoryBase<Position>, IPositionRepositor
     await RepositoryContext.SaveChangesAsync();
   }
 
+  public async Task DeletePosition(Position position)
+  {
+    Delete(position);
+    await RepositoryContext.SaveChangesAsync();
+  }
+
   public async Task<Position?> GetById(int positionId, bool trackChanges) =>
-    await FindByCondition(p => p.Id == positionId, trackChanges).SingleOrDefaultAsync();
+  await FindByCondition(p => p.Id == positionId, trackChanges).SingleOrDefaultAsync();
 
   public async Task<List<Position>> GetPositions(bool trackChanges)
   {
