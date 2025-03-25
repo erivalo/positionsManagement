@@ -38,3 +38,12 @@ export const createPosition = async (position: Position) => {
     console.log(error);
   }
 };
+
+export const deletePosition = async (positionId: number) => {
+  try {
+    await axios.delete(`${baseUrl}/positions/${positionId}`);
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+};

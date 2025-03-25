@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getPositions } from '@/services/positionsService';
+import { deletePosition, getPositions } from '@/services/positionsService';
 
 export interface Position {
-  id: string;
+  id: number;
   title: string;
   budget: number;
   description: string;
@@ -22,10 +22,21 @@ export const PostsList = () => {
     );
   }, []);
 
+  const deleteHandler = async (positionId: number) => {
+    const result = await deletePosition(positionId);
+    if(!result) {
+      return;
+    }
+    const newPositions = JSON.parse(JSON.stringify(positions)) as Position[];
+    const filteredPositions = newPositions.filter(position => position.id !== positionId);
+    setPositions(filteredPositions);
+  }
+
   const renderedPosts = positions.map(position => (
     <article className='post-excerpt' key={position.id}>
       <h3><Link to={`/editPosition/${position.id}`}>{position.title}</Link></h3>
       <p className='post-content'>{position.description?.substring(0, 100)}</p>
+      <button onClick={() => deleteHandler(position.id)}>Delete</button>
     </article>
   ));
 
