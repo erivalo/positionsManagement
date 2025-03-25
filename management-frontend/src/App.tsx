@@ -15,6 +15,7 @@ function App() {
             element={<PostMainPage />}
           ></Route>
           <Route path="/editPosition/:positionId" element={<EditPostForm />} />
+          <Route path="/addPosition" element={<EditPostForm />} />
         </Routes>
       </div>
     </Router>
