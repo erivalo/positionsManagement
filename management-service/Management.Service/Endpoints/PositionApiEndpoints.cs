@@ -1,4 +1,5 @@
 using Management.Service.Dtos;
+using Management.Service.Filters;
 using Management.Service.Infrastructure;
 using Management.Service.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,22 +11,7 @@ public static class PositionApiEndpoints
 {
   public static void RegisterEndpoints(this IEndpointRouteBuilder routeBuilder)
   {
-    routeBuilder.MapPost("/api/positions", async Task<IResult> ([FromServices] IPositionRepository positionRepository, CreatePositionRequest request) =>
-    {
-      var position = new Position
-      {
-        Title = request.Title,
-        PositionNumber = request.PositionNumber,
-        PositionStatusId = 1,
-        RecruiterId = request.RecruiterId,
-        Budget = request.Budget,
-        DepartmentId = request.DepartmentId,
-      };
-
-      await positionRepository.CreatePosition(position);
-
-      return TypedResults.Created(position.Id.ToString());
-    });
+    routeBuilder.MapPost("/api/positions", CreatePosition).AddEndpointFilter<ValidationFilter>();
 
     routeBuilder.MapPut("/api/positions/{positionId}", async Task<IResult> ([FromServices] IPositionRepository positionRepository, int positionId, UpdatePositionRequest request) =>
     {
@@ -83,5 +69,26 @@ public static class PositionApiEndpoints
 
       return TypedResults.NoContent();
     });
+  }
+
+  internal static async Task<IResult> CreatePosition
+  (
+    [FromServices] IPositionRepository positionRepository,
+    CreatePositionRequest request
+  )
+  {
+    var position = new Position
+    {
+      Title = request.Title,
+      PositionNumber = request.PositionNumber,
+      PositionStatusId = 1,
+      RecruiterId = request.RecruiterId,
+      Budget = request.Budget,
+      DepartmentId = request.DepartmentId,
+    };
+
+    await positionRepository.CreatePosition(position);
+
+    return TypedResults.Created(position.Id.ToString());
   }
 }

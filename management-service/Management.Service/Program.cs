@@ -1,8 +1,12 @@
+using FluentValidation;
+using Management.Service.Dtos;
 using Management.Service.Endpoints;
 using Management.Service.Infrastructure.Data.EntityFramework;
+using Management.Service.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSqlLiteDataStore(builder.Configuration);
+builder.Services.AddScoped<IValidator<CreatePositionRequest>, CreatePositionRequestValidator>();
 builder.Services.AddCors(options =>
 {
   options.AddPolicy(name: "MyPolicy",
