@@ -2,9 +2,11 @@ using FluentValidation;
 using Management.Service.Dtos;
 using Management.Service.Endpoints;
 using Management.Service.Infrastructure.Data.EntityFramework;
+using Management.Service.Infrastructure.RabbitMq;
 using Management.Service.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddRabbitMqEventBus(builder.Configuration);
 builder.Services.AddSqlLiteDataStore(builder.Configuration);
 builder.Services.AddScoped<IValidator<CreatePositionRequest>, CreatePositionRequestValidator>();
 builder.Services.AddCors(options =>

@@ -19,7 +19,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <InternalsVisibleTo Include="Management.Tests" />
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
 using Management.Service.Dtos;
 using Management.Service.Filters;
 using Management.Service.Infrastructure;
+using Management.Service.Infrastructure.EventBus.Abstractions;
+using Management.Service.IntegrationEvents;
 using Management.Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -73,6 +75,7 @@ public static class PositionApiEndpoints
 
   internal static async Task<IResult> CreatePosition
   (
+    [FromServices] IEventBus eventBus,
     [FromServices] IPositionRepository positionRepository,
     CreatePositionRequest request
   )
@@ -88,6 +91,8 @@ public static class PositionApiEndpoints
     };
 
     await positionRepository.CreatePosition(position);
+
+    eventBus.PublishAsync(new PositionCreatedEvent(position.Id.ToString()));
 
     return TypedResults.Created(position.Id.ToString());
   }
