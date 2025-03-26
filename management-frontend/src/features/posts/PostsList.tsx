@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { deletePosition, getPositions } from '@/services/positionsService';
-import { option } from '@/utils/types';
-import { recruiters } from '@/utils/constants';
+import { deletePosition, getPositions } from '../../services/positionsService';
+import { option } from '../../utils/types';
+import { recruiters } from '../../utils/constants';
 
 export interface Position {
   id: number;
@@ -18,12 +18,16 @@ export interface Position {
 
 export const PostsList = () => {
   const [positions, setPositions] = useState<Position[]>([]);
+  const [filteredPositions, setFilteredPositions] = useState<Position[]>([]);
   const [selectedRecruiterId, setSelectedRecruiterId] = useState<string>("0");
   const navigate = useNavigate();
   useEffect(() => {
-    getPositions().then((positions) =>
-      setPositions(positions as unknown as Position[])
-    );
+    getPositions().then((positions: Position[]) =>
+      {
+        setPositions(positions);
+        const newFilteredPositions = positions.filter(p => !Boolean(selectedRecruiterId) || selectedRecruiterId === "0" || p.recruiterId == parseInt(selectedRecruiterId));
+        setFilteredPositions(newFilteredPositions);
+      });
   }, []);
 
   const deleteHandler = async (positionId: number) => {
@@ -34,9 +38,11 @@ export const PostsList = () => {
     const newPositions = JSON.parse(JSON.stringify(positions)) as Position[];
     const filteredPositions = newPositions.filter(position => position.id !== positionId);
     setPositions(filteredPositions);
+    const newFilteredPositions = filteredPositions.filter(p => !Boolean(selectedRecruiterId) || selectedRecruiterId === "0" || p.recruiterId == parseInt(selectedRecruiterId));
+    setFilteredPositions(newFilteredPositions);
   }
 
-  const renderedPosts = positions.filter(p => !Boolean(selectedRecruiterId) || p.recruiterId == parseInt(selectedRecruiterId)).map(position => (
+  const renderedPosts = filteredPositions.map(position => (
     <article className='post-excerpt' key={position.id}>
       <h3><Link to={`/editPosition/${position.id}`}>{position.title}</Link></h3>
       <p className='post-content'>{position.description?.substring(0, 100)}</p>
@@ -46,7 +52,9 @@ export const PostsList = () => {
 
   const handlerRecruiterFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
-    setSelectedRecruiterId(e.target.value)
+    setSelectedRecruiterId(e.target.value);
+    const newFilteredPositions = positions.filter(p => !Boolean(e.target.value) || selectedRecruiterId === "0" || p.recruiterId == parseInt(e.target.value));
+    setFilteredPositions(newFilteredPositions);
   }
 
   const addPositionHandler = () => {
@@ -59,7 +67,7 @@ export const PostsList = () => {
     </option>
   ));
 
-  const recruiterFilter = <select defaultValue={1} id="positionRecruiter" name="positionRecruiter" onChange={handlerRecruiterFilter} required>
+  const recruiterFilter = <select id="positionRecruiter" name="positionRecruiter" onChange={handlerRecruiterFilter} required>
     <option value="">Select...</option>
     {getOptions(recruiters)}
   </select>

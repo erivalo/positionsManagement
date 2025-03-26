@@ -1,7 +1,7 @@
 import { Position } from '@/features/posts/PostsList';
 import axios from 'axios';
 
-const baseUrl = 'https://localhost:8001/api';
+const baseUrl = 'http://localhost:8001/api';
 
 export const getPositions = async () => {
   try {

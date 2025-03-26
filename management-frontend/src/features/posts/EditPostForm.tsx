@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"
-import { createPosition, getPositionById, updatePosition } from "@/services/positionsService";
-import { option } from "@/utils/types";
+import { createPosition, getPositionById, updatePosition } from "../../services/positionsService";
+import { option } from "../../utils/types";
 import { Position } from "./PostsList";
-import { departments, recruiters, statuses } from "@/utils/constants";
+import { departments, recruiters, statuses } from "../../utils/constants";
 
 interface EditPostFormFields extends HTMLFormControlsCollection {
   positionTitle: HTMLInputElement;
