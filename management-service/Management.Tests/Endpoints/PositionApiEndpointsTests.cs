@@ -3,16 +3,19 @@ using Management.Service.Infrastructure;
 using Management.Service.Models;
 using Management.Service.Endpoints;
 using Management.Service.Dtos;
+using Management.Service.Infrastructure.EventBus.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Management.Tests.Endpoints;
 public class PositionApiEndpointsTests
 {
   private readonly Mock<IPositionRepository> _positionRepository;
+  private readonly Mock<IEventBus> _eventBus;
 
   public PositionApiEndpointsTests()
   {
     _positionRepository = new Mock<IPositionRepository>();
+    _eventBus = new Mock<IEventBus>();
   }
 
   [Fact]
@@ -39,7 +42,7 @@ public class PositionApiEndpointsTests
       .Setup(repository => repository.GetById(positionId, false))
       .ReturnsAsync(position);
 
-    var result = await PositionApiEndpoints.CreatePosition(_positionRepository.Object, createPositionRequest);
+    var result = await PositionApiEndpoints.CreatePosition(_eventBus.Object, _positionRepository.Object, createPositionRequest);
 
     Assert.NotNull(result);
     var createdResult = (Created)result;

@@ -21,3 +21,18 @@ At the same level of the docker-compose file execute the following commands in o
   <li>Again click on <em><strong>Get Messages</strong></em> button</li>
   <li>The data should be similar to: <em><strong>{"positionId":"5","Id":"fd80062c-578f-4fb9-9ee7-8b9b21fef2ca","CreatedDate":"2025-03-26T19:34:45.1471212Z"}</strong></em>, where the PositionId is the id generated for the new created position</li>
 </ol>
+
+## Steps to run unit tests
+
+### front end unit test
+
+Enter to the **_magament-frontend_** folder with console and type:
+
+- npm install
+- npm run test
+
+### backend unit test
+
+Enter to the **_magament-service/Management.Tests_** folder with console and type:
+
+- dotnet test
