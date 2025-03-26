@@ -2,7 +2,7 @@
 
 ## Steps to run the app
 
-At the same level of the docker-compose execute the sollowing commands in order
+At the same level of the docker-compose file execute the following commands in order:
 
 <ol>
   <li>docker compose up rabbitmq</li>
@@ -19,5 +19,5 @@ At the same level of the docker-compose execute the sollowing commands in order
   <li>Click on <em><strong>PositionCreatedEvent</strong></em> under the column Name</li>
   <li>Then click on <em><strong>Get Messages</strong></em> sub menu</li>
   <li>Again click on <em><strong>Get Messages</strong></em> button</li>
-  <li>The data should be similar to: <em><strong>{"positionId":"5","Id":"fd80062c-578f-4fb9-9ee7-8b9b21fef2ca","CreatedDate":"2025-03-26T19:34:45.1471212Z"}</strong></em></li>
+  <li>The data should be similar to: <em><strong>{"positionId":"5","Id":"fd80062c-578f-4fb9-9ee7-8b9b21fef2ca","CreatedDate":"2025-03-26T19:34:45.1471212Z"}</strong></em>, where the PositionId is the id generated for the new created position</li>
 </ol>
