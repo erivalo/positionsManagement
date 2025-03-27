@@ -29,7 +29,7 @@ At the same level of the docker-compose file execute the following commands in o
 Enter to the **_magament-frontend_** folder with console and type:
 
 - npm install
-- npm run test
+- npm test
 
 ### backend unit test
 
