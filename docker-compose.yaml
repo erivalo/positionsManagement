@@ -1,0 +1,23 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  management:
+    container_name: management
+    build:
+      context: .
+      dockerfile: ./management-service/Management.Service/Dockerfile
+    environment:
+      - "RabbitMq__HostName=host.docker.internal"
+    ports:
+      - "8001:8080"
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./management-frontend/Dockerfile
+    ports:
+      - "5173:5173"
