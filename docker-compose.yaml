@@ -2,6 +2,11 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -12,6 +17,14 @@ services:
       dockerfile: ./management-service/Management.Service/Dockerfile
     environment:
       - "RabbitMq__HostName=host.docker.internal"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     ports:
       - "8001:8080"
   frontend:
@@ -19,5 +32,8 @@ services:
     build:
       context: .
       dockerfile: ./management-frontend/Dockerfile
+    depends_on:
+      management:
+        condition: service_healthy
     ports:
       - "5173:5173"

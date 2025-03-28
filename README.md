@@ -24,14 +24,14 @@ At the same level of the docker-compose file execute the following commands in o
 
 ## Steps to run unit tests
 
-### front end unit test
+### front end unit test (Requirements Node 20.x)
 
 Enter to the **_magament-frontend_** folder with console and type:
 
 - npm install
 - npm test
 
-### backend unit test
+### backend unit test (Requirements .NET 9.0)
 
 Enter to the **_magament-service/Management.Tests_** folder with console and type:
 

@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRabbitMqEventBus(builder.Configuration);
 builder.Services.AddSqlLiteDataStore(builder.Configuration);
 builder.Services.AddScoped<IValidator<CreatePositionRequest>, CreatePositionRequestValidator>();
+builder.Services.AddHealthChecks();
 builder.Services.AddCors(options =>
 {
   options.AddPolicy(name: "MyPolicy",
@@ -30,5 +31,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("MyPolicy");
 app.UseHttpsRedirection();
+app.MapHealthChecks("health");
 
 app.Run();

@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 as base
+RUN apt-get update 
+RUN apt-get --yes install curl
 WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
